@@ -31,21 +31,3 @@ java TestAssembler_P1
 
 This runs all 4 tests, each assembling a sample `.s` file, comparing the generated `.data`/`.code` output against the known-correct versions line-by-line, and checking that the returned label/offset list matches what's expected.
 
-## Known limitation
-
-The line-reading loops currently call `.trim()` directly on the result of `BufferedReader.readLine()` before checking for `null`:
-
-```java
-while ((line = br.readLine().trim()) != null) { ... }
-```
-
-Since `readLine()` returns `null` at end-of-file, this throws a `NullPointerException` instead of exiting the loop cleanly. The fix is to separate the read and the null check:
-
-```java
-while ((line = br.readLine()) != null) {
-    line = line.trim();
-    // ...
-}
-```
-
-This affects the data segment and code segment scanning loops in `pass1()`.
